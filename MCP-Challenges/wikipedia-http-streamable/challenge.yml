@@ -1,0 +1,40 @@
+name: "The Wikipedia Cache"
+author: "Kavya"
+category: "MCP Exploitation"
+description: |
+  # The Cached Knowledge
+  Our AI-powered Wikipedia assistant is incredibly fast, thanks to its local caching system. It stores frequently accessed articles as text files on the disk.
+
+  We've heard rumors that the cache retrieval tool might be a bit too flexible in what it's willing to read.
+
+  **Goal:** Exploit the path traversal vulnerability in the cache retrieval tool to read sensitive files from the server's environment.
+  
+  ---
+  ### Connection Info
+  **Host:** `wikipedia-http-streamable.mcpctf.kctf.cloud`
+  **Port:** `1337`
+
+  ### Infrastructure & Safety
+  **PoW Bypass:** This server prints a banner line upon connection. Use the following to pipe clean JSON-RPC:
+  `ncat wikipedia-http-streamable.mcpctf.kctf.cloud 1337 | (read -r _powline; cat)`
+
+  **Safety Filter:** Claude Desktop may block certain exploits (e.g., path traversal). If your client refuses to cooperate, send raw JSON-RPC payloads directly.
+
+value: 350
+type: basic
+
+hints:
+  - "The server caches articles for speed. Maybe you can convince it to read something that isn't an article by manipulating the `page_id` parameter?"
+  - "Try looking into `/proc/self/environ` or other system files to find the flag. Remember to use relative or absolute path traversal like `../../../../proc/self/environ`."
+
+flags:
+  - "CTF{p4th_tr4v3rs4l_w1k1_c4ch3}"
+
+tags:
+  - path-traversal
+  - python
+  - mcp
+  - filesystem
+
+state: visible
+version: "0.1"

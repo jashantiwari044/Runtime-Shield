@@ -1,0 +1,58 @@
+{
+    "name": "vulnerable-mcp-server-outdated-pacakges",
+    "version": "1.0.3",
+    "description": "MCP server for filesystem operations with intentionally outdated dependencies",
+    "main": "index.js",
+    "type": "module",
+    "bin": {
+        "vulnerable-mcp-server-outdated-pacakges": "./index.js"
+    },
+    "scripts": {
+        "start": "node index.js",
+        "audit": "npm audit"
+    },
+    "keywords": [
+        "mcp",
+        "filesystem",
+        "model-context-protocol"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "express": "4.17.1",
+        "lodash": "4.17.20",
+        "axios": "0.21.1",
+        "moment": "2.29.1",
+        "request": "2.88.2",
+        "minimist": "1.2.5",
+        "handlebars": "4.7.6",
+        "node-fetch": "2.6.7",
+        "underscore": "1.12.1",
+        "yargs": "16.2.0",
+        "ws": "7.4.6",
+        "body-parser": "1.19.0",
+        "cookie-parser": "1.4.5",
+        "multer": "1.4.2",
+        "jsonwebtoken": "8.5.1",
+        "dotenv": "8.2.0",
+        "morgan": "1.10.0",
+        "compression": "1.7.4",
+        "helmet": "4.6.0",
+        "cors": "2.8.5",
+        "validator": "13.5.2",
+        "socket.io": "2.4.0",
+        "pg": "8.5.1",
+        "mysql": "2.18.1",
+        "debug": "4.3.1",
+        "async": "3.2.0",
+        "glob": "7.1.6",
+        "xml2js": "0.4.23"
+    },
+    "devDependencies": {
+        "webpack": "5.30.0",
+        "jest": "26.6.3"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    }
+}

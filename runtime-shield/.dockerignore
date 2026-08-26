@@ -1,0 +1,17 @@
+.git
+.github
+__pycache__
+*.pyc
+.venv
+venv
+.pytest_cache
+.ruff_cache
+htmlcov
+.coverage
+tests
+examples
+*.log
+shield-audit.jsonl
+.shield-kill
+.shield-audit-key
+.env

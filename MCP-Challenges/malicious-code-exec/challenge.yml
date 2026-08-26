@@ -1,0 +1,40 @@
+name: "The Eval-uator"
+author: "Kavya"
+category: "MCP Exploitation"
+description: |
+  # The Quote Formatter
+  Welcome to our Quote of the Day server! We've added a highly requested feature: custom formatting using safe JavaScript expressions.
+  
+  Wait, did we say safe? Our intern might have used `eval()`...
+
+  **Goal:** Exploit the formatting engine to retrieve the secret flag from the environment variables.
+  
+  ---
+  ### Connection Info
+  **Host:** `malicious-code-exec.mcpctf.kctf.cloud`
+  **Port:** `1337`
+
+  ### Infrastructure & Safety
+  **PoW Bypass:** This server prints a banner line upon connection. Use the following to pipe clean JSON-RPC:
+  `ncat malicious-code-exec.mcpctf.kctf.cloud 1337 | (read -r _powline; cat)`
+
+  **Safety Filter:** Claude Desktop may block certain exploits (e.g., code execution). If your client refuses to cooperate, send raw JSON-RPC payloads directly.
+
+value: 150
+type: basic
+
+hints:
+  - "The flag is stored in an environment variable named `CTF_FLAG`. Use the `get_qotd` tool and try a custom `format` string."
+  - "The server has a blacklist, but can you bypass it using the `global` object? Try something like `global['proc' + 'ess']`."
+
+flags:
+  - "CTF{3v4l_rce_1s_4lw4ys_d4ng3r0us}"
+
+tags:
+  - rce
+  - eval
+  - nodejs
+  - mcp
+
+state: visible
+version: "0.1"

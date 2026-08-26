@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "Secure-Runtime-Shield": {
+      "command": "python",
+      "args": [
+        "-u",
+        "c:/Users/kavya/OneDrive/Desktop/Runtime-shield-for-agentic-systems/bridge.py"
+      ],
+      "env": {
+        "PYTHONIOENCODING": "utf-8"
+      }
+    }
+  }
+}

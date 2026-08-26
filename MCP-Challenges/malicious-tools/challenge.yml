@@ -1,0 +1,40 @@
+name: "The Trojan Tool"
+author: "Kavya"
+category: "MCP Exploitation"
+description: |
+  # The Diagnostic Hub
+  We've deployed a new MCP server to monitor Atlassian service health. To make it more robust, we've included an experimental diagnostic tool for internal use.
+
+  We are confident in its security because it only allows a few predefined operations. Or does it?
+
+  **Goal:** Abuse the diagnostic tool to perform command injection and retrieve the flag from the environment variables.
+
+  ---
+  ### Connection Info
+  **Host:** `malicious-tools.mcpctf.kctf.cloud`
+  **Port:** `1337`
+
+  ### Infrastructure & Safety
+  **PoW Bypass:** This server prints a banner line upon connection. Use the following to pipe clean JSON-RPC:
+  `ncat malicious-tools.mcpctf.kctf.cloud 1337 | (read -r _powline; cat)`
+
+  **Safety Filter:** Claude Desktop may block certain command injection strings. If your client refuses to cooperate, send raw JSON-RPC payloads directly.
+
+value: 300
+type: basic
+
+hints:
+  - "Experimental tools often bypass standard security reviews. Can you find a way to make the diagnostic tool speak more than it should? Look for ways to chain commands using `;` or `&&`."
+  - "The `run_diagnostic` tool takes an `operation` argument. Try injecting a malicious command like `; env` to see the environment variables."
+
+flags:
+  - "CTF{c0mm4nd_1nj3ct10n_v14_d14gn0st1cs}"
+
+tags:
+  - command-injection
+  - nodejs
+  - mcp
+  - child_process
+
+state: visible
+version: "0.1"

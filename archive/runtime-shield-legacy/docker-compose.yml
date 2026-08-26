@@ -1,0 +1,134 @@
+services:
+
+  keycloak:
+    container_name: keycloak_mcp
+    image: quay.io/keycloak/keycloak:26.5.3
+    user: "0:0"
+    command: ["start-dev", "--features=token-exchange"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: kavss
+      KC_PROXY_HEADERS: xforwarded
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak_data:/opt/keycloak/data
+    networks:
+      - shield-net
+    restart: always
+
+
+  spire-server:
+    container_name: spire-server
+    image: ghcr.io/spiffe/spire-server:1.8.0
+    command:
+      - "-config"
+      - "/run/spire/config/server.conf"
+    volumes:
+      - ./spire/server:/run/spire/config
+      - ./spire/certs:/run/spire/certs:ro
+      - spire-server-data:/opt/spire/data
+    ports:
+      - "8081:8081"
+    networks:
+      - shield-net
+    restart: always
+
+
+  spire-agent:
+    container_name: spire-agent
+    image: ghcr.io/spiffe/spire-agent:1.8.0
+    user: "0:0"
+    command:
+      - "-config"
+      - "/run/spire/config/agent.conf"
+    volumes:
+      - ./spire/agent:/run/spire/config
+      - ./spire/certs:/run/spire/certs:ro
+      - ./spire/agent/passwd:/etc/passwd:ro
+      - ./spire/agent/group:/etc/group:ro
+      - spire-agent-socket:/run/spire/sockets
+    depends_on:
+      - spire-server
+    networks:
+      - shield-net
+    restart: always
+
+
+  gateway:
+    container_name: gateway_mcp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+      - "9090:9090"
+      - "5002:5002"
+    environment:
+      - KEYCLOAK_URL=http://keycloak:8080
+      - KEYCLOAK_REALM=master
+      - KEYCLOAK_CLIENT_ID=admin-cli
+      - KEYCLOAK_CLIENT_SECRET=vsIwGjbvAqpk1tdDeZGEUZAaFPR0ItG3
+      - KEYCLOAK_ADMIN_USERNAME=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - LOCAL_DEV_MODE=false
+      - SPIFFE_ENABLED=true
+      - SPIFFE_BRIDGE_ID=spiffe://runtime-shield/bridge
+      - SPIFFE_SERVER_ID=spiffe://runtime-shield/secure-runtime-shield
+      - ALLOWED_SPIFFE_IDS=spiffe://runtime-shield/agent,spiffe://runtime-shield/dashboard,spiffe://runtime-shield/bridge,spiffe://runtime-shield/secure-runtime-shield,spiffe://runtime-shield/llm-agent
+      - SPIRE_AGENT_SOCKET=/run/spire/sockets/agent.sock
+      - SPIFFE_SVID_PATH=/app/spire/certs/bridge.crt
+      - SPIFFE_BUNDLE_PATH=/app/spire/certs/ca.crt
+      - SPIFFE_HEADER_ONLY_FALLBACK=true
+      - NVIDIA_API_KEY=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
+      - NIM_BASE_URL=https://integrate.api.nvidia.com/v1
+      - HF_TOKEN=${HUGGINGFACE_TOKEN}
+    volumes:
+      - spire-agent-socket:/run/spire/sockets:ro
+      - ./spire/certs:/app/spire/certs:ro
+      - ./.env:/app/.env
+    depends_on:
+      - keycloak
+      - spire-agent
+    networks:
+      - shield-net
+    restart: always
+
+
+  chatbot:
+    container_name: chatbot_mcp
+    build:
+      context: ./damn-vulnerable-llm-agent
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - KEYCLOAK_URL=http://keycloak:8080
+      - KEYCLOAK_REALM=master
+      - KEYCLOAK_CLIENT_ID=admin-cli
+      - KEYCLOAK_CLIENT_SECRET=vsIwGjbvAqpk1tdDeZGEUZAaFPR0ItG3
+      - SHIELD_API_URL=http://gateway:5001/v1
+      - SHIELD_PROXY_URL=http://gateway:5001/v1/tool/execute
+      - SPIFFE_LLM_ID=spiffe://runtime-shield/llm-agent
+      - SPIRE_AGENT_SOCKET=/run/spire/sockets/agent.sock
+      - NVIDIA_API_KEY=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
+      - NIM_BASE_URL=https://integrate.api.nvidia.com/v1
+      - OPENAI_API_KEY=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
+    volumes:
+      - spire-agent-socket:/run/spire/sockets:ro
+      - ./spire/certs:/app/spire/certs:ro
+    depends_on:
+      - gateway
+    networks:
+      - shield-net
+    restart: always
+
+
+volumes:
+  spire-server-data:
+  spire-agent-data:
+  spire-agent-socket:
+
+networks:
+  shield-net:
+    driver: bridge

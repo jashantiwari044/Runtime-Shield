@@ -1,0 +1,101 @@
+# Runtime Shield configuration
+# Every setting below is optional -- the defaults are safe and usable as-is.
+# Docs: https://github.com/YOUR-ORG/runtime-shield
+
+# enforce = blocks are real. monitor = nothing is blocked, everything is logged.
+# Always roll out with `monitor` first, watch the dashboard, then switch.
+mode: enforce
+
+# What happens to a tool call no rule mentions.
+defaultAction: allow
+
+injection:
+  enabled: true
+  sensitivity: medium     # low | medium | high
+
+command:
+  enabled: true           # blocks `rm -rf /`, `curl | sh`, reverse shells...
+  action: block
+
+egress:
+  enabled: true
+  blockPrivateIPs: true   # stops SSRF into your own network
+  blockCloudMetadata: true
+  # allowHosts: ["api.github.com", "*.mycompany.com"]
+
+chain:
+  enabled: true
+  action: flag            # switch to `block` once tuned for your tool names
+  windowSeconds: 300
+
+# Dataflow tracking: the lethal trifecta (private data + untrusted content +
+# a way out). This is what catches exfiltration that no pattern match can,
+# because it watches where bytes go rather than how a request is worded.
+provenance:
+  enabled: true
+  action: block           # confirmed leak: private data out, untrusted content in
+  egressAction: flag      # private data out, but nothing untrusted was read
+  trifectaAction: flag    # all three legs present, nothing observed crossing
+  sessionTtlSeconds: 3600
+  # Tool classification is glob-matched; empty lists use the built-in defaults.
+  # untrustedTools: ["fetch_*", "read_email", "get_issue"]
+  # privateTools:   ["read_file", "db_query", "get_secret"]
+  # externalSinks:  ["http_post", "send_email", "create_issue"]
+
+secrets:
+  enabled: true
+  action: redact          # redact | block | flag
+
+pii:
+  enabled: true
+  action: redact
+  entities: [email, phone, ssn, credit_card, iban, ip]
+
+filesystem:
+  # Uncomment to confine every file operation to these directories:
+  # sandbox: ["./workspace"]
+  deny:
+    - "**/.ssh/**"
+    - "**/.aws/**"
+    - "**/.env"
+    - "**/*.pem"
+    - "**/id_rsa*"
+    - "/etc/shadow"
+
+rateLimit:
+  enabled: true
+  maxCalls: 600
+  windowSeconds: 60
+
+audit:
+  enabled: true
+  path: shield-audit.jsonl
+  sign: false             # true adds Ed25519 signatures (needs `cryptography`)
+  # Arguments are hashed by default so the log cannot become the leak.
+  # Turn this on to make `shield replay` able to re-decide real traffic.
+  captureArguments: false
+
+# Per-agent permissions. An `allow` list, when present, is exhaustive.
+agents:
+  readonly-bot:
+    allow: ["read_file", "list_*", "search"]
+    rateLimit: "60/min"
+  # trusted-deploy:
+  #   deny: ["exec"]
+  #   sandbox: ["./deploy"]
+
+# Custom rules, first match wins.
+rules:
+  - name: no-production-database
+    tool: "*"
+    match:
+      arguments:
+        connection_string: "*prod*"
+    action: block
+    message: "Production database access is not permitted from an agent."
+
+server:
+  host: 127.0.0.1
+  port: 8000
+  dashboard: true
+  # apiKeys: ["set-me-before-exposing-this"]

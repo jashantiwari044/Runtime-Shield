@@ -1,0 +1,12 @@
+[SSE Bridge] Relaying bridge.py stdio on port 5002
+[SSE Bridge] New connection: 15f1cace-60b3-4124-8fe5-9f1a171cf556
+[SSE Bridge] Connection closed: 15f1cace-60b3-4124-8fe5-9f1a171cf556
+[SSE Bridge] New connection: 3066883a-fae3-4f70-b223-129e78400e59
+[SSE Bridge] Connection closed: 3066883a-fae3-4f70-b223-129e78400e59
+[SSE Bridge] New connection: 02d00ea1-7162-4487-99af-e358831ea2b2
+[SSE Bridge] Connection closed: 02d00ea1-7162-4487-99af-e358831ea2b2
+[SSE Bridge] New connection: 388604af-1646-4c9f-b97d-bd30e90053d5
+[SSE Bridge] Connection closed: 388604af-1646-4c9f-b97d-bd30e90053d5
+[SSE Bridge] Connection closed: 473cb1be-6997-4c6b-a1d6-b3c3d8e71b74
+[SSE Bridge] Connection closed: fd96047f-bf1d-4ee0-8cc5-c7d7a3f86c7e
+[SSE Bridge] New connection: eca085b6-e524-4faa-9d26-fa38834f96df

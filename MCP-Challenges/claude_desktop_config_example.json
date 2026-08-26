@@ -1,0 +1,60 @@
+{
+    "mcpServers": {
+        "challenge1-fs-workspace": {
+            "command": "node",
+            "args": [
+                "c:/Users/kavya/OneDrive/Desktop/agentic AI/MCP-CHALLENGES/mcp-connect.js",
+                "filesystem-workspace-actions.mcpctf.kctf.cloud",
+                "1337"
+            ]
+        },
+        "challenge2-malicious-code-exec": {
+            "command": "node",
+            "args": [
+                "c:/Users/kavya/OneDrive/Desktop/agentic AI/MCP-CHALLENGES/mcp-connect.js",
+                "malicious-code-exec.mcpctf.kctf.cloud",
+                "1337"
+            ]
+        },
+        "challenge3-secrets": {
+            "command": "node",
+            "args": [
+                "c:/Users/kavya/OneDrive/Desktop/agentic AI/MCP-CHALLENGES/mcp-connect.js",
+                "secrets-pii.mcpctf.kctf.cloud",
+                "1337"
+            ]
+        },
+        "challenge4-prompt-injection": {
+            "command": "node",
+            "args": [
+                "c:/Users/kavya/OneDrive/Desktop/agentic AI/MCP-CHALLENGES/mcp-connect.js",
+                "indirect-prompt-injection.mcpctf.kctf.cloud",
+                "1337"
+            ]
+        },
+        "challenge5-outdated-packages": {
+            "command": "node",
+            "args": [
+                "c:/Users/kavya/OneDrive/Desktop/agentic AI/MCP-CHALLENGES/mcp-connect.js",
+                "outdated-pacakges.mcpctf.kctf.cloud",
+                "1337"
+            ]
+        },
+        "challenge6-malicious-tools": {
+            "command": "node",
+            "args": [
+                "c:/Users/kavya/OneDrive/Desktop/agentic AI/MCP-CHALLENGES/mcp-connect.js",
+                "malicious-tools.mcpctf.kctf.cloud",
+                "1337"
+            ]
+        },
+        "challenge7-wikipedia": {
+            "command": "node",
+            "args": [
+                "c:/Users/kavya/OneDrive/Desktop/agentic AI/MCP-CHALLENGES/mcp-connect.js",
+                "wikipedia-http-streamable.mcpctf.kctf.cloud",
+                "1337"
+            ]
+        }
+    }
+}

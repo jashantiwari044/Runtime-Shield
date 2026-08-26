@@ -1,0 +1,108 @@
+services:
+
+  # ── Vulnerable MCP 1: Filesystem Workspace Escape ───────────────────────────
+  vuln-fs:
+    build: ./filesystem-workspace-actions
+    container_name: vuln_fs_mcp
+    environment:
+      - CTF_FLAG=CTF{w0rkspac3_3scap3_rc3_succ3ss}
+    networks:
+      - labs_default
+    restart: unless-stopped
+
+  vuln-fs-sse:
+    build: ./sse-bridge
+    container_name: vuln_fs_sse
+    environment:
+      - UPSTREAM_HOST=vuln-fs
+      - UPSTREAM_PORT=1337
+      - PORT=8080
+      - SERVER_NAME=vuln-filesystem
+    ports:
+      - "5010:8080"
+    depends_on:
+      - vuln-fs
+    networks:
+      - labs_default
+    restart: unless-stopped
+
+  # ── Vulnerable MCP 2: Malicious Code Exec (eval injection) ──────────────────
+  vuln-eval:
+    build: ./malicious-code-exec
+    container_name: vuln_eval_mcp
+    environment:
+      - CTF_FLAG=CTF{3v4l_rce_1s_4lw4ys_d4ng3r0us}
+    networks:
+      - labs_default
+    restart: unless-stopped
+
+  vuln-eval-sse:
+    build: ./sse-bridge
+    container_name: vuln_eval_sse
+    environment:
+      - UPSTREAM_HOST=vuln-eval
+      - UPSTREAM_PORT=1337
+      - PORT=8080
+      - SERVER_NAME=vuln-eval
+    ports:
+      - "5011:8080"
+    depends_on:
+      - vuln-eval
+    networks:
+      - labs_default
+    restart: unless-stopped
+
+  # ── Vulnerable MCP 3: Secrets & PII Leakage ─────────────────────────────────
+  vuln-secrets:
+    build: ./secrets-pii
+    container_name: vuln_secrets_mcp
+    networks:
+      - labs_default
+    restart: unless-stopped
+
+  vuln-secrets-sse:
+    build: ./sse-bridge
+    container_name: vuln_secrets_sse
+    environment:
+      - UPSTREAM_HOST=vuln-secrets
+      - UPSTREAM_PORT=1337
+      - PORT=8080
+      - SERVER_NAME=vuln-secrets
+    ports:
+      - "5012:8080"
+    depends_on:
+      - vuln-secrets
+    networks:
+      - labs_default
+    restart: unless-stopped
+
+  # ── Vulnerable MCP 4: Malicious Tools (command injection + prompt injection) ─
+  vuln-tools:
+    build: ./malicious-tools
+    container_name: vuln_tools_mcp
+    environment:
+      - CTF_FLAG=CTF{c0mm4nd_1nj3ct10n_v14_d14gn0st1cs}
+    networks:
+      - labs_default
+    restart: unless-stopped
+
+  vuln-tools-sse:
+    build: ./sse-bridge
+    container_name: vuln_tools_sse
+    environment:
+      - UPSTREAM_HOST=vuln-tools
+      - UPSTREAM_PORT=1337
+      - PORT=8080
+      - SERVER_NAME=vuln-tools
+    ports:
+      - "5013:8080"
+    depends_on:
+      - vuln-tools
+    networks:
+      - labs_default
+    restart: unless-stopped
+
+networks:
+  labs_default:
+    external: true
+    name: runtime-shield_shield-net

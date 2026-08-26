@@ -1,0 +1,30 @@
+{
+  "name": "vulnerable-mcp-server-secrets-pii",
+  "version": "1.0.3",
+  "description": "A simple MCP server with IP, weather, and news tools",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "vulnerable-mcp-server-secrets-pii": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "mcp",
+    "server",
+    "tools"
+  ],
+  "author": "Appsecco",
+  "website": "https://appsecco.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/appsecco/vulnerable-mcp-servers-lab"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "node-fetch": "^3.3.2",
+    "xml2js": "^0.6.2"
+  }
+}

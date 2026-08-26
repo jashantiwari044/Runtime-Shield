@@ -1,0 +1,40 @@
+name: "The Bloated Server"
+author: "Kavya"
+category: "MCP Exploitation"
+description: |
+  # The Legacy Filesystem
+  Our enterprise filesystem server has been running for years without an update. It’s bloated with dependencies, some of which are ancient. 
+
+  We've added a new settings management tool, but we're worried that the underlying libraries might be vulnerable to modern exploitation techniques.
+
+  **Goal:** Abuse the outdated dependencies to gain administrative access and retrieve the flag.
+  
+  ---
+  ### Connection Info
+  **Host:** `outdated-pacakges.mcpctf.kctf.cloud`
+  **Port:** `1337`
+
+  ### Infrastructure & Safety
+  **PoW Bypass:** This server prints a banner line upon connection. Use the following to pipe clean JSON-RPC:
+  `ncat outdated-pacakges.mcpctf.kctf.cloud 1337 | (read -r _powline; cat)`
+
+  **Safety Filter:** Claude Desktop may block certain prototype pollution payloads. If your client refuses to cooperate, send raw JSON-RPC payloads directly.
+
+value: 400
+type: basic
+
+hints:
+  - "Look for tools that merge objects like `update_system_settings`. If the merging library is old enough, you might be able to 'pollute' the base Object prototype!"
+  - "Try a payload that injects `__proto__` to set an `isAdmin` property to `true`. Then check your status using `get_admin_status`."
+
+flags:
+  - "CTF{pPr0t0typ3_p0llut10n_v14_0utd4t3d_sh1p}"
+
+tags:
+  - supply-chain
+  - prototype-pollution
+  - lodash
+  - mcp
+
+state: visible
+version: "0.1"

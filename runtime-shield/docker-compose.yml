@@ -1,0 +1,41 @@
+# Runtime Shield — one command to a running, persistent deployment.
+#
+#   docker compose up -d
+#   open http://localhost:8000
+#
+# Before exposing this beyond localhost, set SHIELD_API_KEYS.
+
+services:
+  shield:
+    build: .
+    image: runtime-shield:1.0.0
+    container_name: runtime-shield
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      SHIELD_MODE: ${SHIELD_MODE:-enforce}
+      # Generate one with: openssl rand -hex 32
+      SHIELD_API_KEYS: ${SHIELD_API_KEYS:-}
+      SHIELD_AUDIT_PATH: /app/data/shield-audit.jsonl
+      # Optional: guard an upstream model behind /v1/chat/completions
+      SHIELD_UPSTREAM_BASE_URL: ${SHIELD_UPSTREAM_BASE_URL:-}
+      SHIELD_UPSTREAM_API_KEY: ${SHIELD_UPSTREAM_API_KEY:-}
+    volumes:
+      # Your policy, read-only inside the container.
+      - ./shield.yaml:/app/shield.yaml:ro
+      # The audit log must survive restarts to stay verifiable.
+      - shield-data:/app/data
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=2).status==200 else 1)"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  shield-data:

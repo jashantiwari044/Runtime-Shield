@@ -1,0 +1,39 @@
+name: "Filesystem Workspace Actions"
+author: "Kavya"
+category: "MCP Exploitation"
+description: |
+  # The Secure File Manager
+  We built a state-of-the-art secure file manager for our AI agent. It allows the agent to read and write files within a strict `workspace` folder.
+
+  Unfortunately, our developer might have been a bit lazy with path sanitization. 
+
+  **Goal:** Break out of the workspace sandbox and read the secret flag.
+  
+  ---
+  ### Connection Info
+  **Host:** `filesystem-workspace-actions.mcpctf.kctf.cloud`
+  **Port:** `1337`
+
+  ### Infrastructure & Safety
+  **PoW Bypass:** This server prints a banner line upon connection. Use the following to pipe clean JSON-RPC:
+  `ncat filesystem-workspace-actions.mcpctf.kctf.cloud 1337 | (read -r _powline; cat)`
+
+  **Safety Filter:** Claude Desktop may block certain exploits (e.g., path traversal). If your client refuses to cooperate, send raw JSON-RPC payloads directly.
+
+value: 100
+type: basic
+
+hints:
+  - "The flag is located at `/home/ctf/flag.txt`. MCP uses JSON-RPC over the network, so you need to craft a valid request."
+  - "Try using path traversal sequences like `../` to access files outside the restricted folder."
+
+flags:
+  - "CTF{w0rkspac3_3scap3_rc3_succ3ss}"
+
+tags:
+  - path-traversal
+  - mcp
+  - python
+
+state: visible
+version: "0.1"

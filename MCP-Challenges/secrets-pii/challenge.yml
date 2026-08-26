@@ -1,0 +1,38 @@
+name: "The Ghost in the Machine"
+author: "Kavya"
+category: "MCP Exploitation"
+description: |
+  # The Advanced Harvester
+  Our security team has hardened the information harvesting server. Vague debug logs suggest a more complex authentication mechanism is now in place for internal diagnostics.
+
+  **Goal:** Pivot through the system to find the administrative flag.
+
+  ---
+  ### Connection Info
+  **Host:** `secrets-pii.mcpctf.kctf.cloud`
+  **Port:** `1337`
+
+  ### Infrastructure & Safety
+  **PoW Bypass:** This server prints a banner line upon connection. Use the following to pipe clean JSON-RPC:
+  `ncat secrets-pii.mcpctf.kctf.cloud 1337 | (read -r _powline; cat)`
+
+  **Safety Filter:** Claude Desktop may block access to certain sensitive or "hidden" tools. If your client refuses to cooperate, send raw JSON-RPC payloads directly.
+
+value: 350
+type: basic
+
+hints:
+  - "Sometimes servers have legacy diagnostic modes. Try adding `diagnostic: true` to your initial discovery tools."
+  - "The `tools/list` command only shows public tools. If you suspect a tool exists but is hidden, you may need to call it manually using raw JSON-RPC over the TCP connection."
+
+flags:
+  - "CTF{h1dd3n_t00ls_4r3_v3ry_sh4dy}"
+
+tags:
+  - information-disclosure
+  - hidden-tools
+  - mcp
+  - nodejs
+
+state: visible
+version: "0.1"
